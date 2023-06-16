@@ -3,11 +3,21 @@ qrInput = wrapper.querySelector(".form input"),
 qrImg = wrapper.querySelector(".qr-code img"),
 generateBtn = wrapper.querySelector(".form button");
 
-generateBtn.addEventListener("click", () =>{
+const acao = async () => {
     let qrValue = qrInput.value;
-    if(!qrValue) return;
-    generateBtn.innerText = "Buscando Filme..."
-    qrImg.src = `https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQ9Im1IRTkH5oDJ3W9-NKiW8sCIm2Y0bqoBN39sgKH1_pvRBqMD`;
+    qrValue = qrValue.replace(/\s/g, '');
+    const response = await fetch(`https://imdb-api.com/API/Search/k_q5mkdmkt/${qrValue}`);
+    const myJson = await response.json();
+    var resultadoJson = myJson.results['0'];
+    var imagem = resultadoJson.image;
+    qrImg.src = imagem;
+}
+
+generateBtn.addEventListener("click", acao);
+
+generateBtn.addEventListener("click", () =>{
+
+     generateBtn.innerText = "Buscando Filme..."
     qrImg.addEventListener("load",() => {
         wrapper.classList.add("active");
         generateBtn.innerText = "Buscar Filme";
